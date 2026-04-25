@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Messages | Flowzi{% endblock %}
+
+{% block content %}
+<div class="conversation-layout">
+  <aside class="chat-sidebar">
+    <div class="eyebrow">Direct messages</div>
+    <h2 class="section-title">Inbox</h2>
+    <div style="margin: 16px 0 20px;">
+      <a class="btn" href="{% url 'user-search' %}">New Chat</a>
+    </div>
+
+    <div class="messages-list">
+      {% for message in conversations %}
+        <a class="chat-sidebar-item {% if active_direct == message.user.username %}is-active{% endif %}"
+           href="{% url 'directs' message.user.username %}">
+          <div class="post-author">
+            {% if message.user.profile.image %}
+              <img class="avatar avatar-sm" src="{{ message.user.profile.image.url }}" alt="{{ message.user.username }}">
+            {% else %}
+              <img class="avatar avatar-sm" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ message.user.username }}">
+            {% endif %}
+            <div>
+              <strong>@{{ message.user.username }}</strong>
+              <div class="muted">{{ message.last|date:"d M, h:i A" }}</div>
+            </div>
+          </div>
+          {% if message.unread %}
+            <span class="tag-pill">{{ message.unread }} new</span>
+          {% endif %}
+        </a>
+      {% empty %}
+        <div class="empty-state">No conversations yet. Start one from a profile.</div>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <section class="chat-panel">
+    <div class="panel" style="border-radius:0;border:none;border-bottom:1px solid var(--line);box-shadow:none;">
+      {% if active_user %}
+        <div class="post-author">
+          {% if active_user.profile.image %}
+            <img class="avatar" src="{{ active_user.profile.image.url }}" alt="{{ active_user.username }}">
+          {% else %}
+            <img class="avatar" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ active_user.username }}">
+          {% endif %}
+          <div>
+            <strong>{{ active_user.get_full_name|default:active_user.username }}</strong>
+            <div class="muted">@{{ active_user.username }}</div>
+          </div>
+        </div>
+      {% else %}
+        <div class="empty-state">Pick a conversation or start a new one.</div>
+      {% endif %}
+    </div>
+
+    <div class="chat-thread" id="chat-thread">
+      {% for direct in directs %}
+        <article class="chat-bubble {% if direct.sender == request.user %}mine{% else %}theirs{% endif %}">
+          <div>{{ direct.body }}</div>
+          <div class="chat-meta">{{ direct.sender.username }} • {{ direct.date|date:"d M, Y h:i A" }}</div>
+        </article>
+      {% empty %}
+        <div class="empty-state" id="empty-chat">Say hello — your chat will appear here.</div>
+      {% endfor %}
+    </div>
+
+    <div class="chat-composer">
+      {% if active_user %}
+        <form id="chat-form" method="post" action="{% url 'send-message' %}">
+          {% csrf_token %}
+          <input type="hidden" name="to_user" value="{{ active_user.username }}">
+          <input class="chat-input" id="chat-input" type="text" name="body"
+                 placeholder="Type a message..." autocomplete="off" required>
+          <button class="btn" type="submit">Send</button>
+        </form>
+      {% else %}
+        <div class="empty-state">Open a conversation to start messaging.</div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<script>
+  // Scroll to bottom on load
+  const thread = document.getElementById('chat-thread');
+  if (thread) thread.scrollTop = thread.scrollHeight;
+
+  // Submit via AJAX so page doesn't reload
+  const form = document.getElementById('chat-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const body = input.value.trim();
+      if (!body) return;
+
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Remove empty state if present
+        const empty = document.getElementById('empty-chat');
+        if (empty) empty.remove();
+
+        // Append new bubble
+        const bubble = document.createElement('article');
+        bubble.className = 'chat-bubble mine';
+        bubble.innerHTML = `<div>${data.message.body}</div>
+          <div class="chat-meta">${data.message.sender_name} • ${data.message.display_date}</div>`;
+        thread.appendChild(bubble);
+        thread.scrollTop = thread.scrollHeight;
+        input.value = '';
+      })
+      .catch(() => {
+        // Fallback: normal form submit
+        form.submit();
+      });
+    });
+  }
+</script>
+{% endblock %}

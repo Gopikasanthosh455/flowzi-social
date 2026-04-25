@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Flowzi Feed{% endblock %}
+
+{% block content %}
+<div class="page-grid">
+  <section class="stack">
+    <div class="hero-card">
+      <div>
+        <div class="eyebrow">Flowzi social network</div>
+        <h1 class="hero-title">Create boldly. Share daily. Chat instantly.</h1>
+        <p class="hero-copy">
+          Flowzi now brings your feed, profile and private conversations into one connected experience.
+          Publish moments, grow your circle and move from post to real-time chat without leaving the app.
+        </p>
+<!--        <div class="metric-row">-->
+<!--          <div class="metric">-->
+<!--            <strong>{{ post_items|length }}</strong>-->
+<!--            Live posts-->
+<!--          </div>-->
+<!--          <div class="metric">-->
+<!--            <strong>{{ suggested_users|length }}</strong>-->
+<!--            People to follow-->
+<!--          </div>-->
+<!--          <div class="metric">-->
+<!--            <strong>Real-time</strong>-->
+<!--            Channels + WebSockets-->
+<!--          </div>-->
+<!--        </div>-->
+      </div>
+      <div class="panel">
+        <div class="eyebrow">What’s new</div>
+        <h3 class="section-title">Private messaging finally feels alive.</h3>
+        <p class="muted">Open your inbox to see instant delivery powered by Django Channels and Redis-ready WebSockets.</p>
+        <div class="metric-row">
+          <a class="btn" href="{% url 'inbox' %}">Open Messages</a>
+          <a class="btn-light" href="{% url 'newpost' %}">Create Post</a>
+        </div>
+      </div>
+    </div>
+
+    {% for post in post_items %}
+      <article class="post-card">
+        <div class="post-header">
+          <div class="post-author">
+            {% if post.user.profile.image %}
+              <img class="avatar" src="{{ post.user.profile.image.url }}" alt="{{ post.user.username }}">
+            {% else %}
+              <img class="avatar" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ post.user.username }}">
+            {% endif %}
+            <div>
+              <strong><a href="{% url 'profile' post.user.username %}">@{{ post.user.username }}</a></strong>
+              <div class="muted">{{ post.posted|date:"d M Y" }}</div>
+            </div>
+          </div>
+          {% if request.user == post.user %}
+            <div class="action-row">
+              <a class="action-pill" href="{% url 'edit_post' post.id %}">Edit</a>
+              <a class="action-pill" href="{% url 'delete_post' post.id %}">Delete</a>
+            </div>
+          {% endif %}
+        </div>
+
+<!--        <div class="post-media">-->
+<!--          <img src="{{ post.picture.url }}" alt="{{ post.caption }}">-->
+<!--        </div>-->
+        <div class="post-media">
+  <a href="{% url 'post-detail' post.id %}" style="display: block; width: 100%; height: 100%;">
+    <img src="{{ post.picture.url }}" alt="{{ post.caption }}">
+  </a>
+</div>
+
+
+<!--        <div class="post-body">-->
+<!--          <div class="post-actions">-->
+<!--            <div class="action-row">-->
+<!--              <a class="action-pill" href="{% url 'post-detail' post.id %}">-->
+<!--                {% if post.is_liked %}Unlike{% else %}Like{% endif %}-->
+<!--              </a>-->
+<!--              <a class="action-pill" href="{% url 'post-detail' post.id %}">Comment</a>-->
+<!--&lt;!&ndash;              <a class="action-pill" href="{% url 'new-message' post.user.username %}">Message</a>&ndash;&gt;-->
+<!--            </div>-->
+<!--            <a class="action-pill" href="{% url 'post-favourite' post.id %}">Save</a>-->
+<!--          </div>-->
+
+<!--          <div class="feed-meta">-->
+<!--            <div>-->
+<!--              <strong>{{ post.likes }} likes</strong>-->
+<!--              <p>{{ post.caption }}</p>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--              {% for tag in post.tags.all %}-->
+<!--                <span class="tag-pill">#{{ tag.title }}</span>-->
+<!--              {% endfor %}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<div class="post-body">
+  <div class="post-actions">
+    <div class="action-row">
+      <button
+        type="button"
+        class="action-pill like-btn"
+        data-url="{% url 'like' post.id %}"
+        data-post-id="{{ post.id }}"
+      >
+        <span class="like-text">
+          {% if post.is_liked %}Unlike{% else %}Like{% endif %}
+        </span>
+      </button>
+
+<!--      <a class="action-pill" href="{% url 'post-detail' post.id %}">Comment</a>-->
+      <form action="{% url 'post-detail' post.id %}" method="get" style="margin: 0;">
+  <button
+    type="submit"
+    class="action-pill"
+    style="border: none; outline: none; cursor: pointer;"
+  >
+    Comment
+  </button>
+</form>
+
+    </div>
+
+    <a class="action-pill" href="{% url 'post-favourite' post.id %}">Save</a>
+  </div>
+
+  <div class="feed-meta">
+    <div>
+      <strong class="like-count">{{ post.likes }} likes</strong>
+      <p>{{ post.caption }}</p>
+    </div>
+    <div>
+      {% for tag in post.tags.all %}
+        <span class="tag-pill">#{{ tag.title }}</span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+
+<!--        <div class="post-footer">-->
+<!--          {% if post.latest_comment %}-->
+<!--            <div class="comment-row" style="gap: 10px; align-items: flex-start;">-->
+<!--              {% if post.latest_comment.user.profile.image %}-->
+<!--                <img class="avatar avatar-sm" src="{{ post.latest_comment.user.profile.image.url }}" alt="{{ post.latest_comment.user.username }}">-->
+<!--              {% else %}-->
+<!--                <img class="avatar avatar-sm" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ post.latest_comment.user.username }}">-->
+<!--              {% endif %}-->
+<!--              <div>-->
+<!--                <strong>{{ post.latest_comment.user.username }}</strong>-->
+<!--                <p class="muted" style="margin: 4px 0 0;">{{ post.latest_comment.body|truncatechars:120 }}</p>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          {% else %}-->
+<!--            <div class="muted">No comments yet. Start the conversation.</div>-->
+<!--          {% endif %}-->
+<!--        </div>-->
+
+        <div class="post-footer">
+  {% if post.latest_comment %}
+    <div class="comment-row" style="gap: 10px; align-items: flex-start;">
+      {% if post.latest_comment.user.profile.image %}
+        <a href="{% url 'profile' post.latest_comment.user.username %}">
+          <img
+            class="avatar avatar-sm"
+            src="{{ post.latest_comment.user.profile.image.url }}"
+            alt="{{ post.latest_comment.user.username }}"
+          >
+        </a>
+      {% else %}
+        <a href="{% url 'profile' post.latest_comment.user.username %}">
+          <img
+            class="avatar avatar-sm"
+            src="{% static 'sign_up/img/default-profile.jpg' %}"
+            alt="{{ post.latest_comment.user.username }}"
+          >
+        </a>
+      {% endif %}
+
+      <div>
+        <strong>
+          <a href="{% url 'profile' post.latest_comment.user.username %}">
+            {{ post.latest_comment.user.username }}
+          </a>
+        </strong>
+        <p class="muted" style="margin: 4px 0 0;">{{ post.latest_comment.body|truncatechars:120 }}</p>
+      </div>
+    </div>
+  {% else %}
+    <div class="muted">No comments yet. Start the conversation.</div>
+  {% endif %}
+</div>
+
+      </article>
+    {% empty %}
+      <div class="panel empty-state">
+        <h3 class="section-title">Your feed is waiting for the first drop.</h3>
+        <p>Create a post to start building the Flowzi community.</p>
+        <a class="btn" href="{% url 'newpost' %}">Upload your first post</a>
+      </div>
+    {% endfor %}
+  </section>
+
+  <aside class="stack">
+    <div class="panel">
+      <div class="eyebrow">Suggested creators</div>
+      <h3 class="section-title">People who keep Flowzi moving</h3>
+      {% for suggested in suggested_users %}
+        {% if suggested != request.user %}
+          <div class="suggestion-card">
+            <div class="post-author">
+              {% if suggested.profile.image %}
+                <img class="avatar avatar-sm" src="{{ suggested.profile.image.url }}" alt="{{ suggested.username }}">
+              {% else %}
+                <img class="avatar avatar-sm" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ suggested.username }}">
+              {% endif %}
+              <div>
+                <strong>@{{ suggested.username }}</strong>
+                <div class="muted">{{ suggested.get_full_name|default:"Flowzi creator" }}</div>
+              </div>
+            </div>
+            <a class="btn-light" href="{% url 'profile' suggested.username %}">View</a>
+          </div>
+        {% endif %}
+      {% empty %}
+        <p class="muted">More creators will appear here as the community grows.</p>
+      {% endfor %}
+    </div>
+<!--    <div class="panel">-->
+<!--      <div class="profile-card-mini">-->
+<!--        <div class="post-author">-->
+<!--          {% if request.user.profile.image %}-->
+<!--            <img class="avatar" src="{{ request.user.profile.image.url }}" alt="{{ request.user.username }}">-->
+<!--          {% else %}-->
+<!--            <img class="avatar" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ request.user.username }}">-->
+<!--          {% endif %}-->
+<!--          <div>-->
+<!--            <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>-->
+<!--            <div class="muted">@{{ request.user.username }}</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <a class="btn-light" href="{% url 'profile' request.user.username %}">Profile</a>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="panel">-->
+<!--      <div class="eyebrow">Suggested creators</div>-->
+<!--      <h3 class="section-title">People who keep Flowzi moving</h3>-->
+<!--      {% for suggested in suggested_users %}-->
+<!--        {% if suggested != request.user %}-->
+<!--          <div class="suggestion-card">-->
+<!--            <div class="post-author">-->
+<!--              {% if suggested.profile.image %}-->
+<!--                <img class="avatar avatar-sm" src="{{ suggested.profile.image.url }}" alt="{{ suggested.username }}">-->
+<!--              {% else %}-->
+<!--                <img class="avatar avatar-sm" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ suggested.username }}">-->
+<!--              {% endif %}-->
+<!--              <div>-->
+<!--                <strong>@{{ suggested.username }}</strong>-->
+<!--                <div class="muted">{{ suggested.get_full_name|default:"Flowzi creator" }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <a class="btn-light" href="{% url 'profile' suggested.username %}">View</a>-->
+<!--          </div>-->
+<!--        {% endif %}-->
+<!--      {% empty %}-->
+<!--        <p class="muted">More creators will appear here as the community grows.</p>-->
+<!--      {% endfor %}-->
+<!--    </div>-->
+  </aside>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function getCSRFToken() {
+    const cookie = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("csrftoken="));
+    return cookie ? cookie.split("=")[1] : "";
+  }
+
+  document.querySelectorAll(".like-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const url = this.dataset.url;
+      const likeText = this.querySelector(".like-text");
+      const postBody = this.closest(".post-body");
+      const likeCount = postBody.querySelector(".like-count");
+
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRFToken": getCSRFToken()
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        likeText.textContent = data.is_liked ? "Unlike" : "Like";
+        likeCount.textContent = data.likes + " likes";
+      })
+      .catch(error => {
+        console.error("Like error:", error);
+      });
+    });
+  });
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title|default:"Create Post" }} | Flowzi{% endblock %}
+
+{% block content %}
+<div class="page-grid">
+  <section class="composer-card">
+    <div class="eyebrow">Flowzi studio</div>
+    <h1 class="section-title">{{ page_title|default:"Create a new post" }}</h1>
+    <p class="muted">Upload a visual, add a sharp caption and tag it so people can discover your work.</p>
+
+    <form method="post" enctype="multipart/form-data" class="form-grid" style="margin-top: 20px;">
+      {% csrf_token %}
+      <div>
+        <label class="field-label" for="{{ form.picture.id_for_label }}">Visual</label>
+        {{ form.picture }}
+      </div>
+      <div>
+        <label class="field-label" for="{{ form.caption.id_for_label }}">Caption</label>
+        {{ form.caption }}
+      </div>
+      <div>
+        <label class="field-label" for="{{ form.tags.id_for_label }}">Tags</label>
+        {{ form.tags }}
+        <div class="hint">Separate tags with commas, for example: travel, food, design</div>
+      </div>
+      <button class="btn" type="submit">{{ page_title|default:"Create Post" }}</button>
+    </form>
+  </section>
+
+  <aside class="stack">
+    <div class="panel">
+      <div class="eyebrow">Preview</div>
+      <h3 class="section-title">Image Preview</h3>
+      <p class="muted">Your image will appear here once selected.</p>
+    </div>
+    <div class="preview-card" id="preview-card">
+      <span class="muted" id="preview-placeholder">No image selected yet.</span>
+      <img id="preview-image" src="" alt="Preview" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:24px;">
+    </div>
+  </aside>
+</div>
+
+<script>
+  document.getElementById('{{ form.picture.id_for_label }}').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = document.getElementById('preview-image');
+      const placeholder = document.getElementById('preview-placeholder');
+      img.src = ev.target.result;
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+</script>
+{% endblock %}

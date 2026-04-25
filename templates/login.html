@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | Flowzi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'flowzi/css/app.css' %}">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <section class="auth-side">
+        <div class="eyebrow" style="color: rgba(255,255,255,.82);">Flowzi access</div>
+        <h1 class="hero-title" style="color: white;">Your feed is ready when you are.</h1>
+        <p class="hero-copy" style="color: rgba(255,255,255,.88);">
+          Sign in to publish posts, manage your profile and use the new real-time private messaging experience.
+        </p>
+      </section>
+
+      <section class="auth-form">
+        <div class="eyebrow">Welcome back</div>
+        <h2 class="section-title">Sign in to Flowzi</h2>
+        <form method="post" class="form-grid">
+          {% csrf_token %}
+          <div>
+            <label class="field-label" for="id_username">Username</label>
+            <input class="flowzi-input" type="text" name="username" id="id_username" required>
+          </div>
+          <div>
+            <label class="field-label" for="id_password">Password</label>
+            <input class="flowzi-input" type="password" name="password" id="id_password" required>
+          </div>
+          {% if form.errors %}
+            <div class="alert">Your username or password didn’t match. Please try again.</div>
+          {% endif %}
+          <button class="btn" type="submit">Sign In</button>
+        </form>
+        <p class="muted" style="margin-top: 16px;">New here? <a href="{% url 'sign_up' %}" style="color: var(--brand-deep); font-weight: 800;">Create your Flowzi account</a>.</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

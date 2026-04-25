@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | Flowzi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'flowzi/css/app.css' %}">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <section class="auth-side">
+        <div class="eyebrow" style="color: rgba(255,255,255,.82);">Start here</div>
+        <h1 class="hero-title" style="color: white;">Join Flowzi and start building your community.</h1>
+        <p class="hero-copy" style="color: rgba(255,255,255,.88);">
+          Share content, discover creators and move into instant one-to-one chat the moment you connect.
+        </p>
+      </section>
+
+      <section class="auth-form">
+        <div class="eyebrow">Create your account</div>
+        <h2 class="section-title">Welcome to Flowzi</h2>
+        <form method="post" class="form-grid">
+          {% csrf_token %}
+          <div>
+            <label class="field-label" for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+          </div>
+          <div>
+            <label class="field-label" for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+          </div>
+          <div>
+            <label class="field-label" for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+          </div>
+          <div>
+            <label class="field-label" for="{{ form.password2.id_for_label }}">Confirm password</label>
+            {{ form.password2 }}
+          </div>
+          {% if form.errors %}
+            <div class="alert">
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <div>{{ error }}</div>
+                {% endfor %}
+              {% endfor %}
+              {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <button class="btn" type="submit">Create Account</button>
+        </form>
+        <p class="muted" style="margin-top: 16px;">Already a member? <a href="{% url 'sign-in' %}" style="color: var(--brand-deep); font-weight: 800;">Sign in instead</a>.</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

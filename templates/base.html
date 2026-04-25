@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Flowzi{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'flowzi/css/app.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="shell">
+    {% if request.user.is_authenticated %}
+      <header class="topbar">
+        <div class="topbar-card">
+          <a class="brand" href="{% url 'home_page' %}">
+            <span class="brand-badge">F</span>
+            <span>Flowzi</span>
+          </a>
+
+          <nav class="nav-links">
+            <a class="nav-link-chip" href="{% url 'home_page' %}">Home</a>
+            <a class="nav-link-chip" href="{% url 'newpost' %}">Create</a>
+            <a class="nav-link-chip" href="{% url 'inbox' %}">Messages</a>
+            <a class="nav-link-chip" href="{% url 'profile' request.user.username %}">Profile</a>
+            <form method="post" action="{% url 'sign-out' %}" style="display:inline;margin:0;padding:0;">{% csrf_token %}<button type="submit" class="nav-link-chip" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:700;color:var(--muted);line-height:inherit;">Logout</button></form>
+          </nav>
+
+{% if request.user.profile.image %}
+  <a href="{% url 'profile' request.user.username %}">
+    <img class="avatar" src="{{ request.user.profile.image.url }}" alt="{{ request.user.username }}">
+  </a>
+{% else %}
+  <a href="{% url 'profile' request.user.username %}">
+    <img class="avatar" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ request.user.username }}">
+  </a>
+{% endif %}
+
+        </div>
+      </header>
+    {% endif %}
+
+    {% if messages %}
+      <div class="alert-stack">
+        {% for message in messages %}
+          <div class="alert">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </div>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

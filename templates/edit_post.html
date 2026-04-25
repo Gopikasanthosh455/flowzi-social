@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% extends 'home.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Post</title>
+</head>
+
+<body>
+<form method="post" enctype="multipart/form-data"
+      style="max-width: 600px; margin: 50px auto; padding: 25px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
+    {% csrf_token %}
+
+    <h2 style="text-align: center;">Edit Your Post</h2>
+
+    <!-- Image Upload Section -->
+    <div style="text-align: center; border: 2px dashed #ccc; padding: 25px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease-in-out; margin-bottom: 20px;"
+         onclick="document.getElementById('id_picture').click();">
+        <label for="id_picture"
+               style="background-color: #007bff; color: white; padding: 12px 25px; border-radius: 5px; cursor: pointer; transition: background 0.3s;">
+            Change Image
+        </label>
+        {{ form.picture }}
+    </div>
+
+    <!-- Image Preview -->
+    <div id="image-container" style="text-align: center; margin-top: 20px;">
+        <img src="{{ post.picture.url }}" id="preview-image"
+             style="width: 100%; max-width: 400px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+    </div>
+
+    <!-- Caption Input -->
+    <div style="margin-top: 25px;">
+        <label for="id_caption" style="display: block; font-weight: bold; margin-bottom: 5px;">Caption:</label>
+        {{ form.caption }}
+    </div>
+
+    <!-- Tags Input -->
+    <div style="margin-top: 25px;">
+        <label for="id_tags" style="display: block; font-weight: bold; margin-bottom: 5px;">Tags (comma-separated):</label>
+        {{ form.tags }}
+    </div>
+
+    <!-- Buttons -->
+    <div style="text-align: center; margin-top: 30px;">
+    <button type="submit"
+            style="background-color: #28a745; color: white; padding: 12px 25px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
+        Update Post
+    </button>
+
+    {% if post.id %}
+        <a href="{% url 'delete_post' post.id %}"
+           style="background-color: #dc3545; color: white; padding: 12px 25px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; margin-left: 15px;">
+            Delete Post
+        </a>
+    {% endif %}
+
+</div>
+
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let fileInput = document.getElementById('id_picture');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let previewImage = document.getElementById('preview-image');
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Start a Chat | Flowzi{% endblock %}
+
+{% block content %}
+<div class="page-grid">
+  <section class="composer-card">
+    <div class="eyebrow">Find people</div>
+    <h1 class="section-title">Start a new conversation</h1>
+    <form method="get" class="form-grid" style="margin-top: 18px;">
+      <input class="flowzi-input" type="text" name="q" value="{{ query }}" placeholder="Search by username">
+      <button class="btn" type="submit">Search</button>
+    </form>
+  </section>
+
+  <aside class="panel">
+    <div class="eyebrow">Results</div>
+    <h3 class="section-title">Matching users</h3>
+    {% for user in users %}
+      <div class="suggestion-card">
+        <div class="post-author">
+          {% if user.profile.image %}
+            <img class="avatar avatar-sm" src="{{ user.profile.image.url }}" alt="{{ user.username }}">
+          {% else %}
+            <img class="avatar avatar-sm" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ user.username }}">
+          {% endif %}
+          <div>
+            <strong>@{{ user.username }}</strong>
+            <div class="muted">{{ user.get_full_name|default:"Flowzi user" }}</div>
+          </div>
+        </div>
+        <a class="btn-light" href="{% url 'new-message' user.username %}">Chat</a>
+      </div>
+    {% empty %}
+      <div class="empty-state">Search for a username to start a conversation.</div>
+    {% endfor %}
+  </aside>
+</div>
+{% endblock %}

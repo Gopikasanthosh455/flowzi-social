@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile.user.username }} | Flowzi{% endblock %}
+
+{% block content %}
+<section class="profile-hero">
+  <div class="page-grid" style="grid-template-columns: 320px minmax(0, 1fr);">
+    <div>
+      {% if profile.image %}
+        <img class="avatar profile-avatar" src="{{ profile.image.url }}" alt="{{ profile.user.username }}">
+      {% else %}
+        <img class="avatar profile-avatar" src="{% static 'sign_up/img/default-profile.jpg' %}" alt="{{ profile.user.username }}">
+      {% endif %}
+    </div>
+
+    <div class="stack">
+      <div>
+        <div class="eyebrow">Profile</div>
+        <h1 class="section-title" style="margin-bottom: 6px;">
+          {% if profile.first_name %}
+            {{ profile.first_name }}{% if profile.last_name %} {{ profile.last_name }}{% endif %}
+          {% else %}
+            {{ profile.user.username }}
+          {% endif %}
+        </h1>
+        <div class="muted">@{{ profile.user.username }}</div>
+      </div>
+
+      <div class="metric-row">
+        <div class="metric"><strong>{{ post_count }}</strong>Posts</div>
+        <div class="metric"><strong>{{ followers_count }}</strong>Followers</div>
+        <div class="metric"><strong>{{ following_count }}</strong>Following</div>
+      </div>
+
+      <div class="muted">
+        <p>{{ profile.bio|default:"This creator hasn't added a bio yet." }}</p>
+        {% if profile.location %}<div>{{ profile.location }}</div>{% endif %}
+        {% if profile.url %}<div><a href="{{ profile.url }}" target="_blank" rel="noopener">Visit website</a></div>{% endif %}
+      </div>
+
+      <div class="action-row">
+        {% if request.user == profile.user %}
+          <a class="btn" href="{% url 'editProfile' %}">Edit Profile</a>
+          <a class="btn-light" href="{% url 'inbox' %}">Open Inbox</a>
+        {% else %}
+          {% if follow_status %}
+            <a class="btn-light" href="{% url 'follow' profile.user.username 0 %}">Unfollow</a>
+          {% else %}
+            <a class="btn" href="{% url 'follow' profile.user.username 1 %}">Follow</a>
+          {% endif %}
+          <a class="btn-light" href="{% url 'new-message' profile.user.username %}">Message</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stack" style="margin-top: 24px;">
+  <div class="panel">
+    <div class="eyebrow">Gallery</div>
+    <h2 class="section-title">{% if is_saved_tab %}Saved posts{% else %}Recent posts{% endif %}</h2>
+  </div>
+
+  <div class="grid-gallery">
+    {% for post in posts_paginator %}
+      <a class="gallery-card" href="{{ post.get_absolute_url }}">
+        <img src="{{ post.picture.url }}" alt="{{ post.caption }}">
+        <div class="gallery-body">
+          <strong>{{ post.user.username }}</strong>
+          <div class="muted">{{ post.caption|truncatechars:72 }}</div>
+        </div>
+      </a>
+    {% empty %}
+      <div class="panel empty-state">No posts to show yet.</div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

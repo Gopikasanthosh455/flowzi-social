@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile | Flowzi{% endblock %}
+
+{% block content %}
+<div class="page-grid">
+  <section class="composer-card">
+    <div class="eyebrow">Profile studio</div>
+    <h1 class="section-title">Edit your Flowzi profile</h1>
+    <form method="post" enctype="multipart/form-data" class="form-grid" style="margin-top: 20px;">
+      {% csrf_token %}
+      <div>
+        <label class="field-label" for="{{ form.image.id_for_label }}">Profile image</label>
+        {{ form.image }}
+      </div>
+      <div>
+        <label class="field-label" for="{{ form.first_name.id_for_label }}">First name</label>
+        {{ form.first_name }}
+      </div>
+      <div>
+        <label class="field-label" for="{{ form.last_name.id_for_label }}">Last name</label>
+        {{ form.last_name }}
+      </div>
+      <div>
+        <label class="field-label" for="{{ form.location.id_for_label }}">Location</label>
+        {{ form.location }}
+      </div>
+      <div>
+        <label class="field-label" for="{{ form.url.id_for_label }}">Website</label>
+        {{ form.url }}
+      </div>
+      <div>
+        <label class="field-label" for="{{ form.bio.id_for_label }}">Bio</label>
+        {{ form.bio }}
+      </div>
+      <button class="btn" type="submit">Save Profile</button>
+    </form>
+  </section>
+
+  <aside class="panel">
+    <div class="eyebrow">Tip</div>
+    <h3 class="section-title">Profiles that convert</h3>
+    <p class="muted">Use a clear avatar, a short creator bio and one useful link. It makes messaging and follows more likely.</p>
+  </aside>
+</div>
+{% endblock %}
