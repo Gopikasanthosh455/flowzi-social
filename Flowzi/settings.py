@@ -144,3 +144,8 @@ else:
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import os
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'm81X0uYTb1yq81UgZCAW8egryMxCcI2bCCWHfudHSzD2KneesPhWQXbhHi-0Hme-IeU')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
