@@ -1,0 +1,153 @@
+.nav-icon-button {
+  border-radius: 100vmax;
+  height: 2.75rem;
+  width: 2.75rem;
+}
+
+.nav-icons {
+  line-height: 1.5;
+}
+
+.search-button .nav-icons {
+  font-size: 1.25rem;
+  color: var(--clr-secondary-icon);
+}
+
+.search-lg-dropdown {
+  top: 3rem;
+  right: -2.8rem;
+  min-width: 25rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.search-post-text,
+.search-user,
+.search-post {
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease-in;
+}
+
+.search-post-text:hover,
+.search-user:hover,
+.search-post:hover {
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #c6c7c8;
+}
+
+.search-lg-dropdown .nav-icon-button {
+  height: auto;
+  width: auto;
+}
+
+.no-results {
+  cursor: default !important;
+}
+
+.no-results:hover {
+  color: inherit !important;
+  background-color: initial !important;
+  border-color: initial !important;
+}
+
+.header-links i {
+  font-size: 2rem;
+  color: var(--clr-secondary-icon);
+}
+
+.nav-item:not(.active) a:hover {
+  background-color: #eeeeee;
+  border-radius: 4px;
+}
+
+.nav-item.active i {
+  color: var(--clr-primary);
+}
+
+.nav-item.active {
+  border-bottom: solid 3px var(--clr-primary);
+}
+
+.custom-tooltip {
+  --bs-tooltip-bg: rgb(21, 19, 19);
+  --bs-tooltip-color: white;
+}
+
+.search-dropdown {
+  width: 100%;
+  max-width: 18rem !important;
+  position: fixed;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.mobile-nav-arrow-container {
+  padding: 0.35rem 0.5rem;
+  border-radius: 100vmax;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.mobile-nav-arrow-container:hover {
+  background-color: #e8e8e8;
+}
+
+.mobile-nav-arrow {
+  font-size: 1.35rem;
+  line-height: 1.35;
+  color: #606770;
+  transition: font-weight 0.2s ease;
+}
+
+.mobile-nav-arrow-container:hover .mobile-nav-arrow {
+  font-weight: bold;
+}
+
+.search-button-mobile[aria-expanded="true"] {
+  display: none;
+}
+
+.mobile-dropdown-search {
+  font-size: 0.925rem;
+  padding: 0.5rem 1rem;
+  border-radius: 100vmax;
+  background-color: #f2f2f2;
+  color: black;
+}
+
+.mobile-dropdown-search:focus {
+  color: black;
+  background-color: #f2f2f2;
+  border: none;
+  box-shadow: none;
+}
+
+.profile-settings-dropdown .dropdown-menu {
+  min-width: 320px;
+  top: 3rem !important;
+  right: 0 !important;
+  border: none;
+  box-shadow: 0px 1px 15px 0px rgba(51, 51, 51, 0.2) !important;
+}
+
+.profile-settings-dropdown img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.profile-settings-item {
+  cursor: pointer;
+}
+
+.profile-settings-item i {
+  padding: 0.625rem;
+}
+
+.profile-settings-item:hover {
+  background-color: var(--clr-neutral-100);
+}

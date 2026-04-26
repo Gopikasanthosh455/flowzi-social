@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -149,3 +150,5 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'm81X0uYTb1yq81UgZCAW8egryMxCcI2bCCWHf
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['flowzi-social.onrender.com', 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://flowzi-social.onrender.com']
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
